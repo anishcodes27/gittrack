@@ -1,0 +1,19 @@
+.skeleton-dashboard { display: flex; flex-direction: column; gap: 16px; }
+
+.skeleton-heatmap-grid {
+  display: flex;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.skeleton-heatmap-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.skeleton-heatmap-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}

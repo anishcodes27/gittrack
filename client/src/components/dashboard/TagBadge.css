@@ -1,0 +1,26 @@
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, rgba(88, 166, 255, 0.12), rgba(188, 140, 255, 0.08));
+  border: 1px solid rgba(88, 166, 255, 0.25);
+  border-radius: var(--radius-full);
+  color: var(--accent-primary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all var(--transition-base);
+  cursor: default;
+}
+
+.tag-badge--sm { font-size: 0.7rem;  padding: 2px 8px; }
+.tag-badge--md { font-size: 0.78rem; padding: 4px 12px; }
+.tag-badge--lg { font-size: 0.875rem; padding: 6px 14px; }
+
+.tag-badge:hover {
+  background: linear-gradient(135deg, rgba(88, 166, 255, 0.2), rgba(188, 140, 255, 0.15));
+  border-color: rgba(88, 166, 255, 0.5);
+  box-shadow: 0 0 12px rgba(88, 166, 255, 0.2);
+}
+
+.tag-badge-icon { font-size: 1em; line-height: 1; }
+.tag-badge-text { white-space: nowrap; }

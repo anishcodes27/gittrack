@@ -1,0 +1,54 @@
+.language-radar-card { min-height: 340px; }
+
+.radar-badge {
+  background: var(--accent-primary-dim);
+  color: var(--accent-primary);
+  border: 1px solid rgba(88,166,255,0.2);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.radar-chart-wrapper { margin: 0 -8px; }
+
+.radar-tooltip {
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.language-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.language-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  transition: border-color var(--transition-fast);
+}
+
+.language-pill:hover { border-color: var(--border-muted); }
+
+.language-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.language-pill-name { color: var(--text-secondary); }
+.language-pill-pct  { color: var(--text-primary); font-weight: 600; font-family: var(--font-mono); }

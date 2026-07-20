@@ -1,0 +1,109 @@
+.heatmap-card { overflow: visible; }
+
+.heatmap-meta { display: flex; align-items: center; gap: 12px; }
+
+.heatmap-total {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.heatmap-outer {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.heatmap-day-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 20px 0 4px;
+}
+
+.heatmap-day-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.heatmap-scroll { overflow-x: auto; flex: 1; padding-bottom: 4px; }
+.heatmap-scroll::-webkit-scrollbar { height: 3px; }
+
+.heatmap-month-labels {
+  display: grid;
+  grid-template-columns: repeat(53, 14px);
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.heatmap-month-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.heatmap-grid {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap-week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.heatmap-cell:hover { transform: scale(1.4); opacity: 0.9; z-index: 2; }
+.heatmap-empty      { background: transparent !important; border: none; }
+
+.heatmap-level-0 { background: var(--graph-none); }
+.heatmap-level-1 { background: var(--graph-low); }
+.heatmap-level-2 { background: var(--graph-med-low); }
+.heatmap-level-3 { background: var(--graph-med-high); box-shadow: 0 0 4px rgba(57,211,83,0.2); }
+.heatmap-level-4 { background: var(--graph-high); box-shadow: 0 0 6px rgba(57,211,83,0.4); }
+
+/* Legend */
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+  justify-content: flex-end;
+}
+
+.heatmap-legend-label { font-size: 0.68rem; color: var(--text-muted); }
+
+.heatmap-legend-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* Floating tooltip */
+.heatmap-floating-tooltip {
+  position: fixed;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-sm);
+  padding: 5px 9px;
+  font-size: 0.72rem;
+  color: var(--text-primary);
+  pointer-events: none;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  z-index: 999;
+}
+
+.heatmap-floating-tooltip span { color: var(--text-secondary); }

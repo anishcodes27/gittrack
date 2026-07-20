@@ -1,0 +1,27 @@
+{
+  "name": "gittrack-server",
+  "version": "1.0.0",
+  "description": "GitTrack Express.js API Server",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@octokit/graphql": "^7.1.0",
+    "@octokit/rest": "^20.1.1",
+    "bcryptjs": "^2.4.3",
+    "connect-mongo": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.2.3",
+    "node-cron": "^3.0.3",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

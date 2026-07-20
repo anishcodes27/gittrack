@@ -1,0 +1,70 @@
+.pr-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.pr-ring-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pr-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pr-ring-pct {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-success);
+  line-height: 1;
+}
+
+.pr-ring-sub {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pr-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pr-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+}
+
+.pr-stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pr-stat-dot--external { background: var(--accent-success); }
+.pr-stat-dot--personal { background: var(--accent-primary); }
+.pr-stat-dot--open     { background: var(--accent-warning); }
+
+.pr-stat-name  { color: var(--text-secondary); flex: 1; }
+.pr-stat-count { font-weight: 600; color: var(--text-primary); font-family: var(--font-mono); }
+
+.pr-total {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}

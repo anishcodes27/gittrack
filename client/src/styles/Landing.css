@@ -1,0 +1,324 @@
+/* ══════════════════════════════════════════════════════════════
+   GitTrack Landing Page — Premium UI with Parallax & Animations
+   ══════════════════════════════════════════════════════════════ */
+
+/* ─── Page Container ─────────────────────────────────────────── */
+.landing-page {
+  min-height: 100vh;
+  width: 100vw;
+  background: var(--bg-canvas);
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── Animated Gradient Background ──────────────────────────── */
+.landing-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(88, 166, 255, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 100%, rgba(46, 164, 79, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 0% 60%, rgba(188, 140, 255, 0.08) 0%, transparent 60%);
+  animation: bgShift 18s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  0%   { transform: scale(1) translateY(0); opacity: 0.9; }
+  50%  { transform: scale(1.05) translateY(-20px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 0.9; }
+}
+
+/* Floating dot grid overlay */
+.landing-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(88, 166, 255, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  animation: dotDrift 40s linear infinite;
+}
+
+@keyframes dotDrift {
+  from { background-position: 0 0; }
+  to   { background-position: 32px 32px; }
+}
+
+/* ─── Navbar ─────────────────────────────────────────────────── */
+.landing-nav {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 40px;
+}
+
+.landing-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.landing-nav-logo img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(57, 211, 83, 0.4));
+}
+
+.landing-nav-wordmark {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(90deg, #fff 30%, var(--accent-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Hero ───────────────────────────────────────────────────── */
+.landing-hero {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 80px 20px 60px;
+  max-width: 900px;
+  width: 100%;
+}
+
+.landing-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(46, 164, 79, 0.1);
+  border: 1px solid rgba(46, 164, 79, 0.3);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-success);
+  margin-bottom: 32px;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.landing-hero-badge span.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-success);
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.landing-big-title {
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: #fff;
+  margin-bottom: 12px;
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.landing-big-title .gradient-word {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-success) 60%, #39d353 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 16px auto 44px;
+  line-height: 1.7;
+  animation: slideUpFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.15s;
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.landing-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  animation: slideUpFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.btn-hero-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-success));
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 24px rgba(46, 164, 79, 0.35);
+  font-family: var(--font-sans);
+}
+
+.btn-hero-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 40px rgba(46, 164, 79, 0.5);
+}
+
+.btn-hero-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 28px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.btn-hero-ghost:hover {
+  background: var(--bg-overlay);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+@keyframes slideUpFade {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Stats Row ──────────────────────────────────────────────── */
+.landing-stats {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 80px;
+  animation: slideUpFade 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.45s;
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.landing-stat {
+  text-align: center;
+}
+
+.landing-stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.landing-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ─── Feature Cards ──────────────────────────────────────────── */
+.landing-features {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 40px 80px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  transition: all 0.3s ease;
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.5s; }
+.feature-card:nth-child(2) { animation-delay: 0.65s; }
+.feature-card:nth-child(3) { animation-delay: 0.8s; }
+
+.feature-card:hover {
+  border-color: var(--border-muted);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.feature-icon--blue   { background: rgba(88, 166, 255, 0.12); }
+.feature-icon--green  { background: rgba(46, 164, 79, 0.12); }
+.feature-icon--purple { background: rgba(188, 140, 255, 0.12); }
+
+.feature-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.feature-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────── */
+.landing-footer {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+  padding: 24px 40px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .landing-features { grid-template-columns: 1fr; padding: 0 20px 60px; }
+  .landing-nav { padding: 20px; }
+  .landing-hero { padding: 60px 20px 40px; }
+}
+
+/* Legacy classes kept for backward compat */
+.landing-content, .landing-header, .landing-logo, .landing-title,
+.landing-card, .landing-tagline, .landing-description, .landing-actions, .btn-large {
+  display: none;
+}
