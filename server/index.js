@@ -33,6 +33,8 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // ─── Session ───────────────────────────────────────────────────────────────────
+app.set('trust proxy', 1); // Trust Render's reverse proxy for secure cookies
+
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'gittrack_dev_secret_change_in_prod',
   resave: false,
@@ -41,7 +43,7 @@ const sessionConfig = {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   },
 };
 
