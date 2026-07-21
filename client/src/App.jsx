@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Sidebar from './components/layout/Sidebar';
+import ParticlesBackground from './components/layout/ParticlesBackground';
 import Dashboard from './pages/Dashboard';
 import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
@@ -58,9 +59,9 @@ const Login = () => {
         </h1>
 
         <p className="landing-subtitle">
-          GitTrack goes beyond green squares. We analyze your merged pull requests, 
-          collaboration patterns, and coding consistency to generate a real Impact Score — 
-          one that recruiters can actually trust.
+          GitTrack goes beyond green squares. We analyze your merged pull requests,
+          collaboration patterns, and coding consistency to generate a real Impact Score
+          that recruiters can actually trust.
         </p>
 
         <div className="landing-hero-actions">
@@ -102,8 +103,8 @@ const Login = () => {
           <div className="feature-icon feature-icon--green">🏆</div>
           <div className="feature-title">Impact Score</div>
           <p className="feature-desc">
-            A weighted 0–100 score that prioritises merged External PRs (×10 multiplier)
-            over personal repositories — solving the "green square problem" once and for all.
+            A weighted 0-100 score that prioritises merged External PRs (x10 multiplier)
+            over personal repositories, solving the "green square problem" once and for all.
           </p>
         </div>
         <div className="feature-card">
@@ -111,15 +112,15 @@ const Login = () => {
           <div className="feature-title">Recruiter Search</div>
           <p className="feature-desc">
             Recruiters can look up any candidate by GitHub username and instantly view their
-            full analytics dashboard — no login required from the candidate.
+            full analytics dashboard. No login required from the candidate.
           </p>
         </div>
         <div className="feature-card">
           <div className="feature-icon feature-icon--purple">🎯</div>
           <div className="feature-title">AI Specialty Tags</div>
           <p className="feature-desc">
-            Our tag engine analyses thousands of lines of code across your repos to label you 
-            precisely — "Strong Frontend Dev", "Rust Systems Engineer", and more.
+            Our tag engine analyses thousands of lines of code across your repos to label you
+            precisely: "Strong Frontend Dev", "Rust Systems Engineer", and more.
           </p>
         </div>
       </div>
@@ -157,6 +158,7 @@ const AppContent = () => {
 const App = () => {
   return (
     <Router>
+      <ParticlesBackground />
       <AppContent />
     </Router>
   );

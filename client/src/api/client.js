@@ -25,7 +25,7 @@ client.interceptors.response.use(
     const status  = error.response?.status;
 
     if (status === 401) {
-      // Unauthenticated — the AuthContext will handle redirect
+      // Unauthenticated - the AuthContext will handle redirect
       window.dispatchEvent(new CustomEvent('auth:unauthorized'));
     }
 

@@ -36,7 +36,7 @@ const TopBar = ({ lastUpdated, onRefresh, isRefreshing }) => {
         <p className="topbar-subtitle">{page.subtitle}</p>
       </div>
 
-      {/* Center: Recruiter Search — always visible */}
+      {/* Center: Recruiter Search - always visible */}
       <form onSubmit={handleSearch} className={`topbar-search ${isFocused ? 'topbar-search--focused' : ''}`}>
         <div className="topbar-search-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

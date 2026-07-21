@@ -144,7 +144,7 @@ const Dashboard = () => {
       />
 
       <main className="page-content dashboard-content">
-        {/* Profile Header — full width */}
+        {/* Profile Header - full width */}
         <ProfileHeader data={data} />
 
         {/* Row 1: Metric Cards */}

@@ -1,8 +1,10 @@
-/* ─── TopBar ─────────────────────────────────────────────────────────────────── */
+/* TopBar */
 .topbar {
   height: var(--topbar-height);
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(13, 17, 23, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -11,7 +13,6 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  backdrop-filter: blur(8px);
 }
 
 .topbar-left {
@@ -37,7 +38,7 @@
   .topbar-subtitle { display: block; }
 }
 
-/* ─── Search Bar — Center, Prominent ───────────────────────────────────────── */
+/* ─── Search Bar - Center, Prominent ───────────────────────────────────────── */
 .topbar-search {
   display: flex;
   align-items: center;

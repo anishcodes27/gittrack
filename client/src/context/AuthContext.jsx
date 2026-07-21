@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
           setIsAuth(true);
         }
       } catch {
-        // 401 or network error — user is not authenticated
+        // 401 or network error - user is not authenticated
         setUser(null);
         setIsAuth(false);
       } finally {
