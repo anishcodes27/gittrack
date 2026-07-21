@@ -135,8 +135,6 @@ img { display: block; max-width: 100%; }
 .login-layout {
   min-height: 100vh;
   width: 100vw;
-  position: relative;
-  z-index: 1;
 }
 
 .main-area {
