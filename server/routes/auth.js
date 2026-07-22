@@ -20,12 +20,22 @@ router.get(
  */
 router.get(
   '/github/callback',
-  passport.authenticate('github', {
-    failureRedirect: `${process.env.CLIENT_URL || 'http://localhost:3000'}/login?error=auth_failed`,
-  }),
+  (req, res, next) => {
+    const clientUrl = (process.env.CLIENT_URL || 'http://localhost:3000').replace(/\/$/, '');
+    passport.authenticate('github', {
+      failureRedirect: `${clientUrl}/?error=auth_failed`,
+    })(req, res, next);
+  },
   (req, res) => {
-    // Successful authentication — redirect to the dashboard
-    res.redirect(`${process.env.CLIENT_URL || 'http://localhost:3000'}/dashboard`);
+    const clientUrl = (process.env.CLIENT_URL || 'http://localhost:3000').replace(/\/$/, '');
+    // Force session write to database store before redirecting client
+    req.session.save((err) => {
+      if (err) {
+        console.error('[Auth] Session save error on OAuth callback:', err);
+        return res.redirect(`${clientUrl}/?error=session_save_failed`);
+      }
+      res.redirect(`${clientUrl}/dashboard`);
+    });
   }
 );
 
@@ -65,7 +75,12 @@ router.post('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
     req.session.destroy(() => {
-      res.clearCookie('connect.sid');
+      res.clearCookie('connect.sid', {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      });
       res.json({ success: true, message: 'Logged out successfully' });
     });
   });

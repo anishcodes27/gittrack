@@ -20,7 +20,7 @@ const InstitutionCard = ({ board, isSelected, onClick }) => (
   </button>
 );
 
-const Leaderboard = () => {
+const Leaderboard = ({ onToggleSidebar }) => {
   const { isDemoMode } = useAuth();
   const [selectedSlug, setSelectedSlug] = useState(isDemoMode ? 'iit-kgp' : null);
   const [showModal, setShowModal] = useState(false);
@@ -68,7 +68,7 @@ const Leaderboard = () => {
 
   return (
     <div className="main-area">
-      <TopBar />
+      <TopBar onToggleSidebar={onToggleSidebar} />
       <main className="page-content">
         <div className="lb-page-layout">
           {/* Sidebar: institution list */}

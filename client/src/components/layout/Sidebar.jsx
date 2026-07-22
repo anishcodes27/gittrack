@@ -52,12 +52,13 @@ const GitTrackLogo = () => (
   </div>
 );
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const { user, isAuthenticated, isDemoMode, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
+    if (onClose) onClose();
     navigate('/');
   };
 
@@ -66,7 +67,9 @@ const Sidebar = () => {
     : user;
 
   return (
-    <aside className="sidebar">
+    <>
+      {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
+      <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
       {/* Logo */}
       <GitTrackLogo />
 
@@ -77,6 +80,7 @@ const Sidebar = () => {
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={onClose}
             className={({ isActive }) =>
               `sidebar-nav-item ${isActive ? 'sidebar-nav-item--active' : ''}`
             }
@@ -133,6 +137,7 @@ const Sidebar = () => {
         </div>
       )}
     </aside>
+    </>
   );
 };
 

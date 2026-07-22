@@ -16,16 +16,18 @@
 }
 
 .heatmap-day-labels {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 20px 0 4px;
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  gap: 3px;
+  padding-top: 18px;
+  margin-right: 4px;
 }
 
 .heatmap-day-label {
   font-size: 0.65rem;
-  color: var(--text-muted);
-  line-height: 1;
+  color: var(--text-secondary);
+  line-height: 10px;
+  height: 10px;
 }
 
 .heatmap-scroll { overflow-x: auto; flex: 1; padding-bottom: 4px; }
@@ -33,14 +35,16 @@
 
 .heatmap-month-labels {
   display: grid;
-  grid-template-columns: repeat(53, 14px);
+  grid-template-columns: repeat(54, 13px);
   gap: 3px;
   margin-bottom: 4px;
+  height: 14px;
 }
 
 .heatmap-month-label {
-  font-size: 0.65rem;
-  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
@@ -56,22 +60,23 @@
 }
 
 .heatmap-cell {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
   cursor: pointer;
-  transition: transform var(--transition-fast), opacity var(--transition-fast);
-  border: 1px solid rgba(255,255,255,0.04);
+  transition: outline 0.1s ease;
+  outline: 1px solid rgba(27, 31, 35, 0.06);
+  outline-offset: -1px;
 }
 
-.heatmap-cell:hover { transform: scale(1.4); opacity: 0.9; z-index: 2; }
-.heatmap-empty      { background: transparent !important; border: none; }
+.heatmap-cell:hover { outline: 1px solid rgba(255, 255, 255, 0.5); z-index: 2; }
+.heatmap-empty      { background: transparent !important; outline: none; }
 
-.heatmap-level-0 { background: var(--graph-none); }
-.heatmap-level-1 { background: var(--graph-low); }
-.heatmap-level-2 { background: var(--graph-med-low); }
-.heatmap-level-3 { background: var(--graph-med-high); box-shadow: 0 0 4px rgba(57,211,83,0.2); }
-.heatmap-level-4 { background: var(--graph-high); box-shadow: 0 0 6px rgba(57,211,83,0.4); }
+.heatmap-level-0 { background: #161b22; }
+.heatmap-level-1 { background: #0e4429; }
+.heatmap-level-2 { background: #006d32; }
+.heatmap-level-3 { background: #26a641; }
+.heatmap-level-4 { background: #39d353; }
 
 /* Legend */
 .heatmap-legend {

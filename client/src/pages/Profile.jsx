@@ -116,7 +116,7 @@ const StatBox = ({ label, value, sub, color = 'var(--text-primary)' }) => (
 );
 
 // ─── Main Profile Page ────────────────────────────────────────────────────────
-const Profile = () => {
+const Profile = ({ onToggleSidebar }) => {
   const { user, isDemoMode } = useAuth();
   const username = isDemoMode ? 'anishde12020' : user?.username;
   const { data, isLoading, error } = useUserData(username, isDemoMode);
@@ -126,14 +126,14 @@ const Profile = () => {
 
   if (isLoading) return (
     <div className="main-area">
-      <TopBar />
+      <TopBar onToggleSidebar={onToggleSidebar} />
       <main className="page-content"><SkeletonLoader /></main>
     </div>
   );
 
   if (error || !data) return (
     <div className="main-area">
-      <TopBar />
+      <TopBar onToggleSidebar={onToggleSidebar} />
       <main className="page-content">
         <div className="card" style={{ textAlign: 'center', padding: 48 }}>
           <p style={{ color: 'var(--accent-danger)' }}>⚠️ {error || 'No data found.'}</p>
@@ -158,7 +158,7 @@ const Profile = () => {
 
   return (
     <div className="main-area">
-      <TopBar />
+      <TopBar onToggleSidebar={onToggleSidebar} />
       <main className="page-content profile-page">
 
         {/* Profile Header */}

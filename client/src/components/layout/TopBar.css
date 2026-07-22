@@ -138,23 +138,38 @@
   cursor: not-allowed;
 }
 
-.topbar-demo-badge {
-  display: flex;
+.topbar-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
   align-items: center;
-  gap: 6px;
-  background: rgba(210, 153, 34, 0.12);
-  border: 1px solid rgba(210, 153, 34, 0.3);
-  color: var(--accent-warning);
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  font-size: 0.72rem;
-  font-weight: 600;
+  justify-content: center;
 }
 
-.demo-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--accent-warning);
-  border-radius: 50%;
-  animation: pulse 1.5s ease-in-out infinite;
+.topbar-menu-btn:hover {
+  background: var(--bg-overlay);
 }
+
+@media (max-width: 1024px) {
+  .topbar-menu-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .topbar-last-updated {
+    display: none;
+  }
+  .topbar-search input::placeholder {
+    font-size: 0.72rem;
+  }
+}
+

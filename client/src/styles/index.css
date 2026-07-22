@@ -15,9 +15,9 @@
   --bg-hover:           #30363d;
 
   /* Text */
-  --text-primary:       #c9d1d9;
-  --text-secondary:     #8b949e;
-  --text-muted:         #484f58;
+  --text-primary:       #f0f6fc;
+  --text-secondary:     #9198a1;
+  --text-muted:         #7d8590;
   --text-inverse:       #0d1117;
 
   /* Accents */
@@ -549,9 +549,10 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 768px) {
-  .page-content { padding: 16px; }
+  .page-content { padding: 16px 12px; }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-  .score-number { font-size: 2.5rem; }
+  .score-number { font-size: 2.2rem; }
+  .stat-value { font-size: 1.5rem; }
 }
 
 /* ─── Utility Classes ────────────────────────────────────────────────────────── */

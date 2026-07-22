@@ -96,7 +96,7 @@ const ScoreBreakdown = ({ breakdown }) => {
 
 
 // ─── Main Dashboard Page ──────────────────────────────────────────────────────
-const Dashboard = () => {
+const Dashboard = ({ onToggleSidebar }) => {
   const { user, isAuthenticated, isDemoMode } = useAuth();
   const [isRefreshing, setIsRefreshing]       = useState(false);
   const location = useLocation();
@@ -118,14 +118,14 @@ const Dashboard = () => {
 
   if (isLoading) return (
     <div className="main-area">
-      <TopBar lastUpdated={null} onRefresh={handleRefresh} isRefreshing={false} />
+      <TopBar lastUpdated={null} onRefresh={handleRefresh} isRefreshing={false} onToggleSidebar={onToggleSidebar} />
       <main className="page-content"><SkeletonLoader /></main>
     </div>
   );
 
   if (error) return (
     <div className="main-area">
-      <TopBar />
+      <TopBar onToggleSidebar={onToggleSidebar} />
       <main className="page-content">
         <div className="card" style={{ textAlign: 'center', padding: '48px' }}>
           <p style={{ color: 'var(--accent-danger)', fontSize: '1rem' }}>⚠️ {error}</p>
@@ -141,6 +141,7 @@ const Dashboard = () => {
         lastUpdated={data?.lastCacheUpdate || lastFetched}
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
+        onToggleSidebar={onToggleSidebar}
       />
 
       <main className="page-content dashboard-content">

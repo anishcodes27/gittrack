@@ -89,6 +89,7 @@ const FULL_PROFILE_QUERY = `
       repositories(
         first: 30
         ownerAffiliations: OWNER
+        isFork: false
         orderBy: { field: PUSHED_AT, direction: DESC }
         privacy: PUBLIC
       ) {
@@ -134,26 +135,35 @@ const calculateStreak = (weeks) => {
 // ─── Language Aggregation Helper ───────────────────────────────────────────────
 const aggregateLanguages = (repositories) => {
   const langMap = {};
+  let totalReposCounted = 0;
 
   for (const repo of repositories) {
+    if (!repo.languages.edges || repo.languages.edges.length === 0) continue;
+    
+    totalReposCounted++;
+    const repoTotalSize = repo.languages.edges.reduce((sum, edge) => sum + edge.size, 0);
+
     for (const edge of repo.languages.edges) {
       const name = edge.node.name;
       const color = edge.node.color;
       const size = edge.size;
 
       if (!langMap[name]) {
-        langMap[name] = { name, color, linesOfCode: 0 };
+        langMap[name] = { name, color, score: 0 };
       }
-      langMap[name].linesOfCode += size;
+      // Normalize so each repository contributes exactly 100 points total
+      const normalizedScore = repoTotalSize > 0 ? (size / repoTotalSize) * 100 : 0;
+      langMap[name].score += normalizedScore;
     }
   }
 
-  const sorted = Object.values(langMap).sort((a, b) => b.linesOfCode - a.linesOfCode);
-  const total = sorted.reduce((sum, l) => sum + l.linesOfCode, 0);
+  const sorted = Object.values(langMap).sort((a, b) => b.score - a.score);
+  const totalScore = sorted.reduce((sum, l) => sum + l.score, 0);
 
   return sorted.map((lang) => ({
-    ...lang,
-    percentage: total > 0 ? Math.round((lang.linesOfCode / total) * 1000) / 10 : 0,
+    name: lang.name,
+    color: lang.color,
+    percentage: totalScore > 0 ? Math.round((lang.score / totalScore) * 1000) / 10 : 0,
   }));
 };
 

@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import TopBar from '../components/layout/TopBar';
 import client from '../api/client';
 
-const Settings = () => {
+const Settings = ({ onToggleSidebar }) => {
   const { user, isDemoMode } = useAuth();
   
   const [showInLeaderboard, setShowInLeaderboard] = useState(true);
@@ -43,7 +43,7 @@ const Settings = () => {
 
   return (
     <div className="main-area">
-      <TopBar />
+      <TopBar onToggleSidebar={onToggleSidebar} />
       <main className="page-content">
         <div className="card" style={{ maxWidth: 800, margin: '0 auto' }}>
           <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

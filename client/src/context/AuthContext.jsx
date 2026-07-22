@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser]               = useState(null);
   const [isLoading, setIsLoading]     = useState(true);
   const [isAuthenticated, setIsAuth]  = useState(false);
-  const [isDemoMode, setIsDemoMode]   = useState(false);
 
   // Restore session on page load
   useEffect(() => {
@@ -48,19 +47,10 @@ export const AuthProvider = ({ children }) => {
     } catch { /* ignore */ }
     setUser(null);
     setIsAuth(false);
-    setIsDemoMode(false);
-  };
-
-  const enterDemoMode = () => {
-    setIsDemoMode(true);
-  };
-
-  const exitDemoMode = () => {
-    setIsDemoMode(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, isAuthenticated, isDemoMode, login, logout, enterDemoMode, exitDemoMode, setUser }}>
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );
