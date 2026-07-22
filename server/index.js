@@ -1,8 +1,6 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
 const passport = require('passport');
 
 const connectDB = require('./config/db');
@@ -32,37 +30,8 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ─── Session ───────────────────────────────────────────────────────────────────
-app.set('trust proxy', 1); // Trust Render's reverse proxy for secure cookies
-
-const sessionConfig = {
-  secret: process.env.SESSION_SECRET || 'gittrack_dev_secret_change_in_prod',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    path: '/',
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  },
-};
-
-// Use MongoDB to persist sessions (auto-cleanup on expiry)
-if (process.env.MONGODB_URI) {
-  sessionConfig.store = MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
-    collectionName: 'sessions',
-    ttl: 7 * 24 * 60 * 60, // 7 days in seconds
-    autoRemove: 'native',
-  });
-}
-
-app.use(session(sessionConfig));
-
 // ─── Passport ──────────────────────────────────────────────────────────────────
 app.use(passport.initialize());
-app.use(passport.session());
 
 // ─── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);

@@ -2,13 +2,25 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const { getUserData, refreshUserCache } = require('../utils/cacheManager');
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.SESSION_SECRET || 'gittrack_dev_secret_change_in_prod';
 
 /**
- * Middleware: Ensure the requesting user is authenticated.
+ * Middleware: Ensure the requesting user is authenticated via JWT.
  */
 const requireAuth = (req, res, next) => {
-  if (req.isAuthenticated && req.isAuthenticated()) return next();
-  res.status(401).json({ success: false, message: 'Authentication required' });
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Authentication required' });
+  }
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = { _id: decoded.id, username: decoded.username };
+    next();
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Invalid token' });
+  }
 };
 
 /**

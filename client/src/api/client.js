@@ -4,7 +4,6 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const client = axios.create({
   baseURL: `${API_BASE}/api`,
-  withCredentials: true, // required for session cookies
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -13,7 +12,13 @@ const client = axios.create({
 
 // ─── Request Interceptor ───────────────────────────────────────────────────────
 client.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    const token = localStorage.getItem('gittrack_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
   (error) => Promise.reject(error)
 );
 
@@ -25,7 +30,7 @@ client.interceptors.response.use(
     const status  = error.response?.status;
 
     if (status === 401) {
-      // Unauthenticated - the AuthContext will handle redirect
+      localStorage.removeItem('gittrack_token');
       window.dispatchEvent(new CustomEvent('auth:unauthorized'));
     }
 

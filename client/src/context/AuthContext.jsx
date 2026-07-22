@@ -11,6 +11,22 @@ export const AuthProvider = ({ children }) => {
   // Restore session on page load
   useEffect(() => {
     const checkAuth = async () => {
+      // Check for token in URL (from OAuth redirect)
+      const urlParams = new URLSearchParams(window.location.search);
+      const tokenFromUrl = urlParams.get('token');
+      
+      if (tokenFromUrl) {
+        localStorage.setItem('gittrack_token', tokenFromUrl);
+        // Clean the URL so the token isn't visible
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      const token = localStorage.getItem('gittrack_token');
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const data = await client.get('/auth/me');
         if (data.success && data.user) {
@@ -18,7 +34,7 @@ export const AuthProvider = ({ children }) => {
           setIsAuth(true);
         }
       } catch {
-        // 401 or network error - user is not authenticated
+        localStorage.removeItem('gittrack_token');
         setUser(null);
         setIsAuth(false);
       } finally {
@@ -45,6 +61,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await client.post('/auth/logout');
     } catch { /* ignore */ }
+    localStorage.removeItem('gittrack_token');
     setUser(null);
     setIsAuth(false);
   };
