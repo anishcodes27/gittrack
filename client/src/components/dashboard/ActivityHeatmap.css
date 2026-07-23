@@ -72,11 +72,11 @@
 .heatmap-cell:hover { outline: 1px solid rgba(255, 255, 255, 0.5); z-index: 2; }
 .heatmap-empty      { background: transparent !important; outline: none; }
 
-.heatmap-level-0 { background: #161b22; }
-.heatmap-level-1 { background: #0e4429; }
-.heatmap-level-2 { background: #006d32; }
-.heatmap-level-3 { background: #26a641; }
-.heatmap-level-4 { background: #39d353; }
+.heatmap-level-0 { background: #1E293B; }
+.heatmap-level-1 { background: #1E3A5F; }
+.heatmap-level-2 { background: #1D4ED8; }
+.heatmap-level-3 { background: #2563EB; }
+.heatmap-level-4 { background: #3B82F6; }
 
 /* Legend */
 .heatmap-legend {

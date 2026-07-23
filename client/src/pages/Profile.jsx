@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import useUserData from '../hooks/useUserData';
 import TopBar from '../components/layout/TopBar';
@@ -7,6 +7,7 @@ import ActivityHeatmap from '../components/dashboard/ActivityHeatmap';
 import LanguageRadar from '../components/dashboard/LanguageRadar';
 import GrowthSparkline from '../components/dashboard/GrowthSparkline';
 import SkeletonLoader from '../components/dashboard/SkeletonLoader';
+import client from '../api/client';
 import { formatNumber, formatDate } from '../utils/formatters';
 import './Profile.css';
 
@@ -117,12 +118,26 @@ const StatBox = ({ label, value, sub, color = 'var(--text-primary)' }) => (
 
 // ─── Main Profile Page ────────────────────────────────────────────────────────
 const Profile = ({ onToggleSidebar }) => {
-  const { user, isDemoMode } = useAuth();
-  const username = isDemoMode ? 'anishde12020' : user?.username;
-  const { data, isLoading, error } = useUserData(username, isDemoMode);
+  const { user } = useAuth();
+  const username = user?.username;
+  const { data, isLoading, error } = useUserData(username, false);
 
   const [prFilter, setPrFilter] = useState('All');
   const [prSearch, setPrSearch]  = useState('');
+
+  // Fetch commit-based calendar for the heatmap (separate from PR-derived contributionHeatmap)
+  const [commitHeatmap, setCommitHeatmap] = useState(null);
+  useEffect(() => {
+    if (!username) return;
+    client.get(`/user/${username}/commit-calendar`)
+      .then((res) => { if (res?.heatmap) setCommitHeatmap(res.heatmap); })
+      .catch(() => { /* silently fall back to PR heatmap */ });
+  }, [username]);
+
+  // Build a data object that swaps the heatmap source
+  const profileData = commitHeatmap
+    ? { ...data, contributionHeatmap: commitHeatmap }
+    : data;
 
   if (isLoading) return (
     <div className="main-area">
@@ -143,7 +158,7 @@ const Profile = ({ onToggleSidebar }) => {
   );
 
   // Filter PRs
-  const allPRs = data.recentMergedPRs || [];
+  const allPRs = profileData?.recentMergedPRs || [];
   const filteredPRs = allPRs
     .filter(pr => {
       if (prFilter === 'External') return pr.isExternal;
@@ -162,26 +177,26 @@ const Profile = ({ onToggleSidebar }) => {
       <main className="page-content profile-page">
 
         {/* Profile Header */}
-        <ProfileHeader data={data} />
+        <ProfileHeader data={profileData} />
 
         {/* Stats Row */}
         <div className="profile-stats-grid">
-          <StatBox label="Impact Score" value={`${data.impactScore}/100`} color="var(--accent-success)" sub="Normalized 0–100" />
-          <StatBox label="Total Commits" value={formatNumber(data.totalCommits || 0)} color="var(--accent-primary)" sub="Past 12 months" />
-          <StatBox label="Merged PRs" value={data.mergedPRCount || 0} color="var(--accent-success)" sub={`${data.externalPRCount || 0} external`} />
-          <StatBox label="Current Streak" value={`${data.currentStreak || 0}d`} color="var(--graph-high)" sub={`Best: ${data.longestStreak || 0}d`} />
-          <StatBox label="PR Merge Rate" value={`${data.prMergeRate || 0}%`} color="var(--accent-warning)" sub={`${data.openPRCount || 0} still open`} />
-          <StatBox label="Code Reviews" value={formatNumber(data.reviewsGiven || 0)} sub="PRs reviewed" />
+          <StatBox label="Impact Score" value={`${profileData?.impactScore}/100`} color="var(--accent-success)" sub="Normalized 0–100" />
+          <StatBox label="Total Commits" value={formatNumber(profileData?.totalCommits || 0)} color="var(--accent-primary)" sub="Past 12 months" />
+          <StatBox label="Merged PRs" value={profileData?.mergedPRCount || 0} color="var(--accent-success)" sub={`${profileData?.externalPRCount || 0} external`} />
+          <StatBox label="Current Streak" value={`${profileData?.currentStreak || 0}d`} color="var(--graph-high)" sub={`Best: ${profileData?.longestStreak || 0}d`} />
+          <StatBox label="PR Merge Rate" value={`${profileData?.prMergeRate || 0}%`} color="var(--accent-warning)" sub={`${profileData?.openPRCount || 0} still open`} />
+          <StatBox label="Code Reviews" value={formatNumber(profileData?.reviewsGiven || 0)} sub="PRs reviewed" />
         </div>
 
         {/* Charts Row */}
         <div className="profile-charts-row">
-          <GrowthSparkline data={data} />
-          <LanguageRadar data={data} />
+          <GrowthSparkline data={profileData} />
+          <LanguageRadar data={profileData} />
         </div>
 
-        {/* Activity Heatmap */}
-        <ActivityHeatmap data={data} />
+        {/* Activity Heatmap — commit-based data from GitHub */}
+        <ActivityHeatmap data={profileData} source="commits" />
 
         {/* Score + PR List Row */}
         <div className="profile-bottom-row">

@@ -222,3 +222,31 @@
   }
 }
 
+/* Login CTA for unauthenticated visitors */
+.sidebar-login-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: calc(100% - 24px);
+  margin: 12px auto 0;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.08));
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: var(--radius-md);
+  color: var(--accent-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.sidebar-login-cta:hover {
+  background: linear-gradient(135deg, rgba(59,130,246,0.28), rgba(59,130,246,0.14));
+  border-color: rgba(59,130,246,0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59,130,246,0.2);
+}
+
+

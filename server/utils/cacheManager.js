@@ -120,6 +120,7 @@ const refreshUserCache = async (userId, overrideToken = null) => {
     monthlyGrowth: profileData.monthlyGrowth,
     contributionHeatmap: profileData.contributionHeatmap,
     recentMergedPRs: profileData.recentMergedPRs,
+    repositories: profileData.repositories || [],
 
     // Cache timestamp
     lastCacheUpdate: new Date(),

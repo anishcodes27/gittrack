@@ -31,12 +31,15 @@ const ScoreBar = ({ score }) => (
   </div>
 );
 
-const LeaderboardTable = ({ members = [], institutionName, institutionSlug, refreshKey, setRefreshKey }) => {
-  const { user, isDemoMode } = useAuth();
+const LeaderboardTable = ({ members = [], institutionName, institutionSlug, refreshKey, setRefreshKey, onRequireLogin }) => {
+  const { user, isAuthenticated } = useAuth();
   const [isJoining, setIsJoining] = useState(false);
 
   const handleJoin = async () => {
-    if (isDemoMode) return alert("Cannot join in demo mode.");
+    if (!isAuthenticated) {
+      if (onRequireLogin) onRequireLogin();
+      return;
+    }
     setIsJoining(true);
     try {
       await client.post('/leaderboard/join', { institutionSlug });
@@ -48,7 +51,20 @@ const LeaderboardTable = ({ members = [], institutionName, institutionSlug, refr
     }
   };
 
-  const isMember = members.some(m => m.username === (user?.username || 'anishde12020'));
+  const handleLeave = async () => {
+    if (!window.confirm('Are you sure you want to leave this leaderboard?')) return;
+    setIsJoining(true); // repurpose loading state
+    try {
+      await client.delete('/leaderboard/leave', { data: { institutionSlug } });
+      setRefreshKey(old => old + 1);
+    } catch (err) {
+      alert(err.message || 'Failed to leave');
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
+  const isMember = members.some(m => m.username === user?.username);
 
   return (
     <div className="card lb-table-card animate-fade-in">
@@ -58,11 +74,17 @@ const LeaderboardTable = ({ members = [], institutionName, institutionSlug, refr
             <h2 className="lb-table-title">{institutionName}</h2>
             <span className="lb-member-count">{members.length} members</span>
           </div>
-          {!isMember && (
-            <button className="btn btn-primary" onClick={handleJoin} disabled={isJoining} style={{ padding: '6px 16px', fontSize: '0.85rem' }}>
-              {isJoining ? 'Joining...' : 'Join Institution'}
-            </button>
-          )}
+          <div>
+            {isMember ? (
+              <button className="btn btn-ghost" onClick={handleLeave} disabled={isJoining} style={{ padding: '6px 16px', fontSize: '0.85rem', color: 'var(--accent-danger)' }}>
+                {isJoining ? 'Leaving...' : 'Leave Institution'}
+              </button>
+            ) : (
+              <button className="btn btn-primary" onClick={handleJoin} disabled={isJoining} style={{ padding: '6px 16px', fontSize: '0.85rem' }}>
+                {isJoining ? 'Joining...' : 'Join Institution'}
+              </button>
+            )}
+          </div>
         </div>
       )}
 

@@ -5,12 +5,14 @@ import useUserData from '../hooks/useUserData';
 import ProfileHeader from '../components/dashboard/ProfileHeader';
 import StreakCard from '../components/dashboard/StreakCard';
 import PRCard from '../components/dashboard/PRCard';
-import GrowthSparkline from '../components/dashboard/GrowthSparkline';
+import WeeklyActivity from '../components/dashboard/WeeklyActivity';
 import LanguageRadar from '../components/dashboard/LanguageRadar';
 import ActivityHeatmap from '../components/dashboard/ActivityHeatmap';
 import MetricCard from '../components/dashboard/MetricCard';
 import TagBadge from '../components/dashboard/TagBadge';
 import SkeletonLoader from '../components/dashboard/SkeletonLoader';
+import RepositoriesSection from '../components/dashboard/RepositoriesSection';
+import ContributionStats from '../components/dashboard/ContributionStats';
 import TopBar from '../components/layout/TopBar';
 import { formatNumber } from '../utils/formatters';
 import './Dashboard.css';
@@ -148,6 +150,9 @@ const Dashboard = ({ onToggleSidebar }) => {
         {/* Profile Header - full width */}
         <ProfileHeader data={data} />
 
+        {/* Contribution Stats row */}
+        <ContributionStats data={data} />
+
         {/* Row 1: Metric Cards */}
         <div className="grid-metric-cards dashboard-metric-row">
           <StreakCard data={data} />
@@ -177,14 +182,17 @@ const Dashboard = ({ onToggleSidebar }) => {
 
         {/* Row 2: Charts */}
         <div className="dashboard-charts-row">
-          <GrowthSparkline data={data} />
+          <WeeklyActivity data={data} />
           <LanguageRadar data={data} />
         </div>
 
         {/* Row 3: Heatmap (full width) */}
         <ActivityHeatmap data={data} />
 
-        {/* Row 4: Score breakdown + Recent PRs */}
+        {/* Row 4: Repositories Section */}
+        <RepositoriesSection data={data} />
+
+        {/* Row 5: Score breakdown + Recent PRs */}
         <div className="dashboard-bottom-row">
           <ScoreBreakdown breakdown={data?.scoreBreakdown} />
           <RecentPRs prs={data?.recentMergedPRs} />

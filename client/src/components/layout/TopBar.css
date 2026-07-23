@@ -66,9 +66,17 @@
 .topbar-search-icon {
   display: flex;
   align-items: center;
-  color: var(--accent-primary);
+  color: var(--text-muted);
   flex-shrink: 0;
-  margin-right: 10px;
+  margin-right: 8px;
+}
+
+.topbar-search-gh-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 6px;
+  opacity: 0.75;
 }
 
 .topbar-search input {

@@ -1,0 +1,29 @@
+.wa-chart-wrapper {
+  margin-top: 16px;
+  margin-bottom: -8px;
+}
+
+.wa-tooltip {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.wa-tooltip-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 0 0 4px 0;
+}
+
+.wa-tooltip-value {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.wa-tooltip-value strong {
+  color: var(--accent-success);
+}

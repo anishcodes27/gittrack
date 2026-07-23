@@ -22,7 +22,7 @@ const generateEmptyHeatmap = () => {
 const WEEK_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 const MONTH_LABELS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const ActivityHeatmap = ({ data }) => {
+const ActivityHeatmap = ({ data, source = 'prs' }) => {
   const [tooltip, setTooltip] = useState(null);
   const scrollRef = useRef(null);
 
@@ -32,10 +32,11 @@ const ActivityHeatmap = ({ data }) => {
     }
   }, [data]);
 
-  // Use authentic GitHub data or clean empty 365-day calendar
-  const rawDays = data?.contributionHeatmap?.length > 0
-    ? data.contributionHeatmap
-    : generateEmptyHeatmap();
+  // Build a map of dates from fetched data
+  const dataMap = new Map();
+  if (data?.contributionHeatmap?.length > 0) {
+    data.contributionHeatmap.forEach(d => dataMap.set(d.date, d));
+  }
 
   // Extract set of dates (YYYY-MM-DD) where user has merged EXTERNAL PRs
   const externalPRDates = new Set(
@@ -44,18 +45,28 @@ const ActivityHeatmap = ({ data }) => {
       .map((pr) => new Date(pr.mergedAt).toISOString().split('T')[0])
   );
 
-  // Ensure days are sorted chronologically and strictly filter for EXTERNAL contributions only
-  const sortedDays = [...rawDays]
-    .sort((a, b) => new Date(a.date) - new Date(b.date))
-    .map((day) => {
-      // If day date is not in external PR merged dates, force level = 0 and count = 0
+  // ALWAYS start with a full 365-day window ending today
+  const emptyDays = generateEmptyHeatmap();
+
+  // Merge the fetched data into the 365-day window (ensuring exact 365 days length)
+  const sortedDays = emptyDays.map((emptyDay) => {
+    const fetchedDay = dataMap.get(emptyDay.date);
+    const day = fetchedDay || emptyDay;
+
+    if (source === 'prs') {
       const isExternalDate = externalPRDates.has(day.date);
       return {
         ...day,
-        count: isExternalDate ? day.count : 0,
-        level: isExternalDate ? day.level : 0,
+        count: isExternalDate ? (day.count || 0) : 0,
+        level: isExternalDate ? (day.level || 0) : 0,
       };
-    });
+    }
+    return {
+      ...day,
+      count: day.count || 0,
+      level: day.level || 0,
+    };
+  });
 
   // Build grid of 52-53 weeks (columns) x 7 days (Sunday to Saturday)
   const firstDate = new Date(sortedDays[0]?.date || new Date());
@@ -82,7 +93,7 @@ const ActivityHeatmap = ({ data }) => {
     }
   });
 
-  const totalContribs = rawDays.reduce((sum, d) => sum + (d?.count || 0), 0);
+  const totalContribs = sortedDays.reduce((sum, d) => sum + (d?.count || 0), 0);
 
   return (
     <div className="card heatmap-card animate-fade-in delay-500">
@@ -125,8 +136,8 @@ const ActivityHeatmap = ({ data }) => {
                   return (
                     <div
                       key={di}
-                      className={`heatmap-cell ${day ? `heatmap-level-${day.level}` : 'heatmap-empty'}`}
-                      style={{ background: day ? heatmapColor(day.level) : 'transparent' }}
+                      className={`heatmap-cell ${day ? `heatmap-level-${day.level || 0}` : 'heatmap-empty'}`}
+                      style={{ background: day ? heatmapColor(day.level || 0) : 'transparent' }}
                       onMouseEnter={(e) => {
                         if (day) {
                           const rect = e.target.getBoundingClientRect();
@@ -167,7 +178,7 @@ const ActivityHeatmap = ({ data }) => {
           className="heatmap-floating-tooltip"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
-          <strong>{tooltip.count} contributions</strong>
+          <strong>{tooltip.count} {source === 'commits' ? 'commits' : 'PRs'}</strong>
           <span> on {formatDate(tooltip.date)}</span>
         </div>
       )}

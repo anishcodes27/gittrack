@@ -46,9 +46,9 @@ const useUserData = (username, demoMode = false) => {
   }, [fetchData]);
 
   const refresh = async () => {
-    if (demoMode) return;
+    if (demoMode || !username) return;
     try {
-      await client.post('/user/refresh');
+      await client.post(`/user/${username}/refresh`);
       await fetchData();
     } catch (err) {
       setError(err.message);

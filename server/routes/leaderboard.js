@@ -3,9 +3,28 @@ const router = express.Router();
 const Leaderboard = require('../models/Leaderboard');
 const User = require('../models/User');
 
-const requireAuth = (req, res, next) => {
-  if (req.isAuthenticated && req.isAuthenticated()) return next();
-  res.status(401).json({ success: false, message: 'Authentication required' });
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.SESSION_SECRET || 'gittrack_dev_secret_change_in_prod';
+
+const requireAuth = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Authentication required' });
+  }
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    // Fetch the full user from DB because the leaderboard join route needs 
+    // full user details (avatarUrl, impactScore, etc.) to store in the member snapshot.
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'User not found' });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Invalid token' });
+  }
 };
 
 /**

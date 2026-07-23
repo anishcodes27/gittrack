@@ -85,7 +85,7 @@ const FULL_PROFILE_QUERY = `
         totalCount
       }
 
-      # Top repositories for language analysis
+      # Top repositories for language analysis and Repositories section
       repositories(
         first: 30
         ownerAffiliations: OWNER
@@ -96,6 +96,21 @@ const FULL_PROFILE_QUERY = `
         nodes {
           name
           stargazerCount
+          forkCount
+          description
+          url
+          updatedAt
+          primaryLanguage {
+            name
+            color
+          }
+          repositoryTopics(first: 10) {
+            nodes {
+              topic {
+                name
+              }
+            }
+          }
           languages(first: 5, orderBy: { field: SIZE, direction: DESC }) {
             edges {
               size
@@ -278,6 +293,28 @@ const fetchFullProfile = async (username, token) => {
       ? Math.round((totalMergedPRs / (totalMergedPRs + totalOpenPRs)) * 100)
       : 0;
 
+    // Enrich repository nodes with per-repo language percentages
+    const enrichedRepos = user.repositories.nodes.map((repo) => {
+      const edges = repo.languages?.edges || [];
+      const totalSize = edges.reduce((sum, e) => sum + e.size, 0);
+      const repoLanguages = edges.map((e) => ({
+        name: e.node.name,
+        color: e.node.color,
+        percentage: totalSize > 0 ? Math.round((e.size / totalSize) * 1000) / 10 : 0,
+      }));
+      return {
+        name: repo.name,
+        description: repo.description || '',
+        url: repo.url,
+        stargazerCount: repo.stargazerCount,
+        forkCount: repo.forkCount || 0,
+        updatedAt: repo.updatedAt,
+        primaryLanguage: repo.primaryLanguage || null,
+        topics: (repo.repositoryTopics?.nodes || []).map((n) => n.topic.name),
+        languages: repoLanguages,
+      };
+    });
+
     return {
       // Profile
       username: user.login,
@@ -311,6 +348,9 @@ const fetchFullProfile = async (username, token) => {
       languages: languages.slice(0, 10),
       contributionHeatmap: heatmap,
       monthlyGrowth,
+
+      // Repositories (enriched with per-repo language bars + topics)
+      repositories: enrichedRepos,
     };
   } catch (error) {
     console.error(`[GraphQL] Failed to fetch profile for ${username}:`, error.message);
@@ -318,4 +358,56 @@ const fetchFullProfile = async (username, token) => {
   }
 };
 
-module.exports = { fetchFullProfile };
+// ─── Commit Calendar Query ─────────────────────────────────────────────────────
+const COMMIT_CALENDAR_QUERY = `
+  query GetCommitCalendar($username: String!, $from: DateTime!, $to: DateTime!) {
+    user(login: $username) {
+      contributionsCollection(from: $from, to: $to) {
+        contributionCalendar {
+          weeks {
+            contributionDays {
+              date
+              contributionCount
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * Fetches commit contribution calendar for a user (for the Profile page heatmap).
+ * Returns daily commit counts mapped to level 0-4.
+ *
+ * @param {string} username - GitHub username
+ * @param {string} token    - Access token or server PAT
+ */
+const getCommitCalendar = async (username, token) => {
+  const gql = createClient(token);
+  const now = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  const { user } = await gql(COMMIT_CALENDAR_QUERY, {
+    username,
+    from: oneYearAgo.toISOString(),
+    to: now.toISOString(),
+  });
+
+  if (!user) throw new Error(`GitHub user not found: ${username}`);
+
+  const weeks = user.contributionsCollection.contributionCalendar.weeks;
+
+  const heatmap = weeks.flatMap((week) =>
+    week.contributionDays.map((day) => {
+      const c = day.contributionCount;
+      const level = c === 0 ? 0 : c <= 3 ? 1 : c <= 6 ? 2 : c <= 9 ? 3 : 4;
+      return { date: day.date, count: c, level };
+    })
+  );
+
+  return { heatmap };
+};
+
+module.exports = { fetchFullProfile, getCommitCalendar };

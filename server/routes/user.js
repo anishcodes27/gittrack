@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const { getUserData, refreshUserCache } = require('../utils/cacheManager');
+const { getCommitCalendar } = require('../services/githubGraphQL');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.SESSION_SECRET || 'gittrack_dev_secret_change_in_prod';
 
@@ -100,6 +101,64 @@ router.get('/:username/score', async (req, res) => {
     return res.json({ success: true, data: user });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+/**
+ * GET /api/user/:username/commit-calendar
+ * Returns commit-based heatmap data for a GitHub user (for Profile page).
+ * Public route — uses server PAT.
+ */
+router.get('/:username/commit-calendar', async (req, res) => {
+  const { username } = req.params;
+  try {
+    if (!process.env.GITHUB_PAT) {
+      return res.status(503).json({ success: false, message: 'Server PAT not configured.' });
+    }
+    const result = await getCommitCalendar(username, process.env.GITHUB_PAT);
+    return res.json({ success: true, ...result });
+  } catch (err) {
+    console.error(`[API] GET /user/${username}/commit-calendar error:`, err.message);
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+/**
+ * POST /api/user/:username/refresh
+ * Forces a public cache refresh for any GitHub username.
+ * No auth required — uses the server PAT just like the on-the-fly fetch in GET /:username.
+ */
+router.post('/:username/refresh', async (req, res) => {
+  const { username } = req.params;
+  try {
+    if (!process.env.GITHUB_PAT) {
+      return res.status(503).json({ success: false, message: 'Server PAT not configured; cannot refresh.' });
+    }
+
+    // Find or create a shell user (same pattern as GET /:username)
+    let targetUser = await User.findOne({ username });
+    if (!targetUser) {
+      targetUser = new User({
+        githubId: 'temp_' + username + '_' + Date.now(),
+        username,
+        isPublic: true,
+      });
+      await targetUser.save();
+    }
+
+    const updatedUser = await refreshUserCache(targetUser._id, process.env.GITHUB_PAT);
+    return res.json({
+      success: true,
+      message: 'Profile refreshed successfully',
+      data: {
+        impactScore: updatedUser.impactScore,
+        specialtyTag: updatedUser.specialtyTag,
+        lastCacheUpdate: updatedUser.lastCacheUpdate,
+      },
+    });
+  } catch (err) {
+    console.error(`[API] POST /user/${username}/refresh error:`, err.message);
+    return res.status(500).json({ success: false, message: 'Refresh failed', error: err.message });
   }
 });
 

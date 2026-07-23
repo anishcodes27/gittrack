@@ -107,6 +107,9 @@ const UserSchema = new mongoose.Schema(
     // --- Heatmap Data (365 days) ---
     contributionHeatmap: [HeatmapDaySchema],
 
+    // --- Repository Details (for Repositories section) ---
+    repositories: { type: [mongoose.Schema.Types.Mixed], default: [] },
+
     // --- PR Details (for leaderboard & profile deep-dives) ---
     recentMergedPRs: [PRDetailSchema],
 
